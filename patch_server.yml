@@ -1,1 +1,14 @@
+#Patch centos/RHEL/Oracle Linux servers in the linux group in the inventory file to latest version. This will not update or update packages like npm,nginx,php...Fell free to add or remove entire block to update and upgrade all systems
+#This is tested on ansible 2.7+
+---
+  hosts: linux
+  gather_facts: no
+  become: yes
+  tasks:
+     - name: upgrade all packages
+       yum:
+         name: '*'
+         state: latest
+         exclude: php*,nodejs*,npm*,nginx*
+         update_cache: yes
 

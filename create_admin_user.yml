@@ -1,1 +1,26 @@
+#This will create a user called kelvin and will be granted sudo access.
+#/localfolder/kelvin contains the contents below(without the hash):
+#kelvin ALL=(ALL) NOPASSWD: ALL
 
+---
+- hosts: linux
+  become: yes
+  tasks:
+     - name: Add a group
+       group:
+        name: kelvin
+        state: present
+
+     - name: Add user
+       user:
+        name: kelvin
+        group: kelvin
+        comment: sysadmin
+        password: $6$zyeMBxmYd5XW8pSg$O1r8vuo8At7CF7N31g5V0wJaQkcAWXhGF0Ie9tS4HNK7YkF4.2bedNQw8SRUEcYmxehnEnR8u0WJUPYrIfy2K0
+     
+     - name: copy sudoers file created for kelvin after validating
+       ansible.builtin.copy:
+          src: /localfolder/kelvin
+          dest: /etc/sudoers.d/kelvin
+          validate: /usr/sbin/visudo -csf %s
+---
